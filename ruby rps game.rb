@@ -1,2 +1,2 @@
 x = "hello"
-puts x + "world"
+puts x and " world"
