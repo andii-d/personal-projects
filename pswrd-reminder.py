@@ -30,3 +30,5 @@ Further Extension
 Implement a self-destruct sequence. If someone enters a password incorrectly 3 times in a row then the data file should be deleted. Closing the program and re-running it should not reset the number of incorrect attempts. 
 
 """
+
+x = 5
