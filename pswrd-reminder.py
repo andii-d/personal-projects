@@ -41,3 +41,5 @@ should be deleted. Closing the program and re-running it should not reset the nu
 """
 
 x = 5
+
+print("hello world")
