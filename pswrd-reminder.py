@@ -85,7 +85,7 @@ def register():
 
     # Creating a new Account object with the given details
     Account(username, password)
-    print('Your account has been created!\n')
+    print('\nYour account has been created!\n')
 
     # Redirecting the user back to the Music Quiz Menu
     menu()            
