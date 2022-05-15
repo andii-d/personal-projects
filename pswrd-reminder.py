@@ -44,8 +44,6 @@ import re
 import string
 import time
 
-from pip import main
-
 # Creates an instance of an account
 class Account:
     # Holds all the accounts within a class dictionary
