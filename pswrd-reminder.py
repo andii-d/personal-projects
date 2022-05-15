@@ -57,7 +57,7 @@ class Account:
 
 def accounts():
     # Loading all accounts in
-    with open('a.txt', 'r') as file:
+    with open('accounts.txt', 'r') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
@@ -80,7 +80,7 @@ def register():
     password = input('Please create a password: ')
 
     # Saving the account to the 'accounts.txt' file
-    with open('database.txt', 'a') as f:
+    with open('accounts.txt', 'a') as f:
         f.write(username + ':' + password + '\n')
 
     # Creating a new Account object with the given details
@@ -113,10 +113,10 @@ def login():
             menu()          
             
 def menu():
-    print('\nWelcome to your personal password reminder!'
+    print('\nWelcome to your personal password reminder!\n'
           '\n1. Register an account'
-          '2. Login'
-          '3. Quit')
+          '\n2. Login'
+          '\n3. Quit\n')
     
     while True:
         try:
@@ -134,8 +134,8 @@ def menu():
                 login()
             
             elif mainmenu == 3:
-                print('Quitting.'), time.sleep(0.5)
-                print('.'), time.sleep(0.5)
+                print('Quitting.', end=''), time.sleep(0.5)
+                print('.', end=''), time.sleep(0.5)
                 print('.'), time.sleep(0.5)
                 quit()
             
