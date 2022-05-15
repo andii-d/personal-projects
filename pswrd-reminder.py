@@ -40,6 +40,28 @@ should be deleted. Closing the program and re-running it should not reset the nu
 
 """
 
-x = 5
+import re
+import string
 
-print("hello world")
+# Creates an instance of an account
+class Account:
+    # Holds all the accounts within a class dictionary
+    allAccounts = {}
+
+    def __init__(self, username, password):
+        self.allAccounts[username] = self
+        self.password = password
+        
+
+def accounts():
+    # Loading all accounts in
+    with open('database.txt') as file:
+        for line in file:
+            # Strips the line of any new lines
+            line = line.rstrip()
+            # Splits the line by a : and assigns it into the corresponding variables
+            username, password = re.split('[:]', line)
+            # Initialising the Account object
+            Account(username, password)
+            
+accounts()
