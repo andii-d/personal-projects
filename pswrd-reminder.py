@@ -42,6 +42,9 @@ should be deleted. Closing the program and re-running it should not reset the nu
 
 import re
 import string
+import time
+
+from pip import main
 
 # Creates an instance of an account
 class Account:
@@ -50,12 +53,13 @@ class Account:
 
     def __init__(self, username, password):
         self.allAccounts[username] = self
+        self.username = username
         self.password = password
         
 
 def accounts():
     # Loading all accounts in
-    with open('database.txt') as file:
+    with open('a.txt', 'r') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
@@ -64,4 +68,79 @@ def accounts():
             # Initialising the Account object
             Account(username, password)
             
+def register():
+    print('\nWelcome to the registration page.')
+
+    # Setting the user's new account with their sign in credentials
+    while True:
+        username = input('Please create a username: ')
+        if username in Account.allAccounts.keys():
+            print('The username is already taken. Please choose another username.\n')
+        else:
+            break
+
+    password = input('Please create a password: ')
+
+    # Saving the account to the 'accounts.txt' file
+    with open('database.txt', 'a') as f:
+        f.write(username + ':' + password + '\n')
+
+    # Creating a new Account object with the given details
+    Account(username, password)
+    print('Your account has been created!\n')
+
+    # Redirecting the user back to the Music Quiz Menu
+    menu()            
+            
+def login():
+    print('\nWelcome to the login page.')
+
+    # Ask the user to enter their credentials
+    username = input('Please enter your username: ')
+    password = input('Please enter your password: ')
+
+    try:
+        # Checks the value (password) to see if it would match the key (username), and if so then it grants access
+        authenticatedUser = (Account.allAccounts[username].password == password)
+    except KeyError:
+        # In the case the username doesn't exist, then deny access
+        authenticatedUser = False
+    finally:
+        if authenticatedUser:
+            print('\nWelcome ', username, '!')
+            quit()
+
+        else:
+            print('The account credentials are incorrect. You will be returned to the menu.\n')
+            menu()          
+            
+def menu():
+    print('\nWelcome to your personal password reminder!'
+          '\n1. Register an account'
+          '2. Login'
+          '3. Quit')
+    
+    while True:
+        try:
+            mainmenu = int(input('Please enter an option: '))
+    
+        except ValueError:
+            print('Please enter an integer.')
+            continue
+        
+        else:
+            if mainmenu == 1:
+                register()
+            
+            elif mainmenu == 2:
+                login()
+            
+            elif mainmenu == 3:
+                print('Quitting.'), time.sleep(0.5)
+                print('.'), time.sleep(0.5)
+                print('.'), time.sleep(0.5)
+                quit()
+            
+                
 accounts()
+menu()
