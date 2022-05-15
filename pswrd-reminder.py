@@ -57,7 +57,7 @@ class Account:
 
 def accounts():
     # Loading all accounts in
-    with open('accounts.txt', 'r') as file:
+    with open('database.txt', 'r') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
@@ -80,7 +80,7 @@ def register():
     password = input('Please create a password: ')
 
     # Saving the account to the 'accounts.txt' file
-    with open('accounts.txt', 'a') as f:
+    with open('database.txt', 'a') as f:
         f.write(username + ':' + password + '\n')
 
     # Creating a new Account object with the given details
@@ -105,7 +105,7 @@ def login():
         authenticatedUser = False
     finally:
         if authenticatedUser:
-            print('\nWelcome ', username, '!')
+            print('\nWelcome', username, '!')
             quit()
 
         else:
