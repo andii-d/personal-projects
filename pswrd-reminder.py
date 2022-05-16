@@ -45,34 +45,41 @@ import string
 import time
 
 # Creates an instance of an account
-class Account:
+class Accounts:
     # Holds all the accounts within a class dictionary
     allAccounts = {}
 
-    def __init__(self, username, password):
-        self.allAccounts[username] = self
+    def __init__(self, account, username, password):
+        self.allAccounts[account] = self
+        self.account = account
         self.username = username
         self.password = password
         
 
 def accounts():
     # Loading all accounts in
-    with open('database.txt', 'r') as file:
+    with open('database.txt') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
             # Splits the line by a : and assigns it into the corresponding variables
             username, password = re.split('[:]', line)
             # Initialising the Account object
-            Account(username, password)
+            Accounts(username, password)
             
 def register():
     print('\nWelcome to the registration page.')
 
     # Setting the user's new account with their sign in credentials
     while True:
+        account = input('Please enter your account name: ')
+        if account in Accounts.allAccounts.keys():
+            print('The username is already taken. Please choose another username.\n')
+        else:
+            pass
+        
         username = input('Please create a username: ')
-        if username in Account.allAccounts.keys():
+        if username in Accounts.allAccounts.keys():
             print('The username is already taken. Please choose another username.\n')
         else:
             break
@@ -81,10 +88,10 @@ def register():
 
     # Saving the account to the 'accounts.txt' file
     with open('database.txt', 'a') as f:
-        f.write(username + ':' + password + '\n')
+        f.write(account + ':' + username + ':' + password + '\n')
 
     # Creating a new Account object with the given details
-    Account(username, password)
+    Accounts(account, username, password)
     print('\nYour account has been created!\n')
 
     # Redirecting the user back to the Music Quiz Menu
@@ -99,7 +106,7 @@ def login():
 
     try:
         # Checks the value (password) to see if it would match the key (username), and if so then it grants access
-        authenticatedUser = (Account.allAccounts[username].password == password)
+        authenticatedUser = (Accounts.allAccounts[username].password == password)
     except KeyError:
         # In the case the username doesn't exist, then deny access
         authenticatedUser = False
@@ -114,8 +121,8 @@ def login():
             
 def menu():
     print('\nWelcome to your personal password reminder!\n'
-          '\n1. Register an account'
-          '\n2. Login'
+          '\n1. Enter your account, username and password'
+          '\n2. Recover your account'
           '\n3. Quit\n')
     
     while True:
