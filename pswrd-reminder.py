@@ -87,16 +87,32 @@ def accounts():
             # Splits the line by a : and assigns it into the corresponding variables
             account, username, password = re.split('[:]', line)
             # Initialising the Account object
+<<<<<<< HEAD
             Accounts(account, username, password)
+=======
+            Accounts(username, password)
+>>>>>>> b365caa624acda4dfc73912e1620b44c3ea2d524
             
 def register():
     print('\nWelcome to the registration page.')
 
     # Setting the user's new account with their sign in credentials
     while True:
+<<<<<<< HEAD
         account = input('Please create an account name: ')
         if account in Accounts.allAccounts.keys():
             print('The account already exists. Please choose another account.\n')
+=======
+        account = input('Please enter your account name: ')
+        if account in Accounts.allAccounts.keys():
+            print('The username is already taken. Please choose another username.\n')
+        else:
+            pass
+        
+        username = input('Please create a username: ')
+        if username in Accounts.allAccounts.keys():
+            print('The username is already taken. Please choose another username.\n')
+>>>>>>> b365caa624acda4dfc73912e1620b44c3ea2d524
         else:
             username = input('Please create a username: ')
             if username in Accounts.allAccounts.keys():
@@ -105,6 +121,7 @@ def register():
                 break
         
 
+<<<<<<< HEAD
 def login():
     print('\nWelcome to the login page.')
     while True:
@@ -120,6 +137,38 @@ def login():
             else:
                 print('Please re-enter a correct account name.')
                 continue
+=======
+    password = input('Please create a password: ')
+
+    # Saving the account to the 'accounts.txt' file
+    with open('database.txt', 'a') as f:
+        f.write(account + ':' + username + ':' + password + '\n')
+
+    # Creating a new Account object with the given details
+    Accounts(account, username, password)
+    print('\nYour account has been created!\n')
+
+    # Redirecting the user back to the Music Quiz Menu
+    menu()            
+            
+def login():
+    print('\nWelcome to the login page.')
+
+    # Ask the user to enter their credentials
+    username = input('Please enter your username: ')
+    password = input('Please enter your password: ')
+
+    try:
+        # Checks the value (password) to see if it would match the key (username), and if so then it grants access
+        authenticatedUser = (Accounts.allAccounts[username].password == password)
+    except KeyError:
+        # In the case the username doesn't exist, then deny access
+        authenticatedUser = False
+    finally:
+        if authenticatedUser:
+            print('\nWelcome', username, '!')
+            quit()
+>>>>>>> b365caa624acda4dfc73912e1620b44c3ea2d524
 
         else:
             print('Please re-enter a correct account name.')
