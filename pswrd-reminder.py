@@ -43,79 +43,92 @@ should be deleted. Closing the program and re-running it should not reset the nu
 import re
 import string
 import time
+import os
+from cryptography.fernet import Fernet
+
+global counter
+counter = 3
 
 # Creates an instance of an account
-class Account:
+class Accounts:
     # Holds all the accounts within a class dictionary
     allAccounts = {}
 
-    def __init__(self, username, password):
-        self.allAccounts[username] = self
+    def __init__(self, account, username, password):
+        self.allAccounts[account] = self
+        self.account = account
         self.username = username
         self.password = password
         
+def encryption():
+    password = input('Please create a password: ')
+    
+    encrypt_pw = password
+    # Shifts the password by the length of itself
+    shift = len(password)
+    # Gets the string of ascii letters
+    alphabet = string.ascii_letters
+    # Shifts the ascii letters by the number given
+    shifted = alphabet[shift:] + alphabet[:shift]
+    # Makes a translation of the ascii alphabet to apply to the password
+    table = str.maketrans(alphabet, shifted)
+    # Applies the translated alphabet to the password
+    encrypted = encrypt_pw.translate(table)
+    
+    print('\nYour key to decrypt your password is: ', shift)
+
 
 def accounts():
     # Loading all accounts in
-    with open('database.txt', 'r') as file:
+    with open('database.txt') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
             # Splits the line by a : and assigns it into the corresponding variables
-            username, password = re.split('[:]', line)
+            account, username, password = re.split('[:]', line)
             # Initialising the Account object
-            Account(username, password)
+            Accounts(account, username, password)
             
 def register():
     print('\nWelcome to the registration page.')
 
     # Setting the user's new account with their sign in credentials
     while True:
-        username = input('Please create a username: ')
-        if username in Account.allAccounts.keys():
-            print('The username is already taken. Please choose another username.\n')
+        account = input('Please create an account name: ')
+        if account in Accounts.allAccounts.keys():
+            print('The account already exists. Please choose another account.\n')
         else:
-            break
+            username = input('Please create a username: ')
+            if username in Accounts.allAccounts.keys():
+                print('The username is already taken. Please choose another username.\n')
+            else:
+                break
+        
 
-    password = input('Please create a password: ')
-
-    # Saving the account to the 'accounts.txt' file
-    with open('database.txt', 'a') as f:
-        f.write(username + ':' + password + '\n')
-
-    # Creating a new Account object with the given details
-    Account(username, password)
-    print('\nYour account has been created!\n')
-
-    # Redirecting the user back to the Music Quiz Menu
-    menu()            
-            
 def login():
     print('\nWelcome to the login page.')
-
-    # Ask the user to enter their credentials
-    username = input('Please enter your username: ')
-    password = input('Please enter your password: ')
-
-    try:
-        # Checks the value (password) to see if it would match the key (username), and if so then it grants access
-        authenticatedUser = (Account.allAccounts[username].password == password)
-    except KeyError:
-        # In the case the username doesn't exist, then deny access
-        authenticatedUser = False
-    finally:
-        if authenticatedUser:
-            print('\nWelcome', username, '!')
-            quit()
+    while True:
+        # Ask the user to enter their credentials
+        account = input('\nPlease enter your account: ')
+        if account in Accounts.allAccounts.keys():
+            username = input('\nPlease enter your username: ')
+            if username in Accounts.allAccounts.keys():
+                print('\nAccount accessed. Your password is: ', ), time.sleep(2)
+                
+                menu()
+                
+            else:
+                print('Please re-enter a correct account name.')
+                continue
 
         else:
-            print('The account credentials are incorrect. You will be returned to the menu.\n')
-            menu()          
-            
+            print('Please re-enter a correct account name.')
+            continue
+
 def menu():
     print('\nWelcome to your personal password reminder!\n'
-          '\n1. Register an account'
-          '\n2. Login'
+          '\n1. Enter your account, username and password'
+          '\n2. Recover your account'
           '\n3. Quit\n')
     
     while True:
@@ -142,3 +155,11 @@ def menu():
                 
 accounts()
 menu()
+
+
+"""
+steps for next time:
+
+• do 'shift = len(password) - len(password) - len(password)' to get the original shift
+• implement the system into login()
+"""
