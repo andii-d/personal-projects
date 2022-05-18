@@ -73,8 +73,12 @@ def encryption():
     table = str.maketrans(alphabet, shifted)
     # Applies the translated alphabet to the password
     encrypted = encrypt_pw.translate(table)
+
+    with open('database.txt', 'a') as f:
+        f.write(encrypted)
+
     
-    print('\nYour key to decrypt your password is: ', shift)
+    print('\nIMPORTANT: \nYour key to decrypt your password is: ', shift)
 
 
 def accounts():
@@ -106,6 +110,7 @@ def register():
 
 def login():
     print('\nWelcome to the login page.')
+
     while True:
         # Ask the user to enter their credentials
         account = input('\nPlease enter your account: ')
@@ -117,7 +122,7 @@ def login():
                 menu()
                 
             else:
-                print('Please re-enter a correct account name.')
+                print('Please re-enter a correct username.')
                 continue
 
         else:
@@ -150,8 +155,8 @@ def menu():
                 print('.', end=''), time.sleep(0.5)
                 print('.'), time.sleep(0.5)
                 quit()
-            
-                
+         
+
 accounts()
 menu()
 
