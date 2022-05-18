@@ -44,7 +44,6 @@ import re
 import string
 import time
 import os
-from cryptography.fernet import Fernet
 
 global counter
 counter = 3
