@@ -97,15 +97,40 @@ def register():
 
     # Setting the user's new account with their sign in credentials
     while True:
-        account = input('Please create an account name: ')
-        if account in Accounts.allAccounts.keys():
-            print('The account already exists. Please choose another account.\n')
+        account = input('\nPlease create an account name: ')
+        if account in Accounts.allAccounts.keys() or account == '':
+            print('The account already exists or has an invalid name. Please re-enter a new name.\n')
         else:
-            username = input('Please create a username: ')
-            if username in Accounts.allAccounts.keys():
+            username = input('\nPlease create a username: ')
+            if username in Accounts.allAccounts.keys() or account == '':
                 print('The username is already taken. Please choose another username.\n')
+
             else:
-                break
+                password = input('\nPlease create a password: ')
+
+                if password == '':
+                    print('Please re-enter a valid password.')
+                
+                else:
+                    encrypt_pw = password
+                    # Shifts the password by the length of itself
+                    shift = len(password)
+                    # Gets the string of ascii letters
+                    alphabet = string.ascii_letters
+                    # Shifts the ascii letters by the number given
+                    shifted = alphabet[shift:] + alphabet[:shift]
+                    # Makes a translation of the ascii alphabet to apply to the password
+                    table = str.maketrans(alphabet, shifted)
+                    # Applies the translated alphabet to the password
+                    global encrypted
+                    encrypted = encrypt_pw.translate(table)
+
+
+                    with open('database.txt', 'a') as f:
+                        f.write(account + ':' + username + ':' + encrypted + '\n')
+                        print('\nYour credentials have been encryted and saved.\n'), time.sleep(0.5)
+                        break
+
         
 
 def login():
