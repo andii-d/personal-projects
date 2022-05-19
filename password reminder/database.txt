@@ -1,6 +1,0 @@
-<<<<<<< HEAD
-asdasd:asdasd:nEzgrk
-andy25:s:adacWeWfmbajXlYfmbggmblZgmbgmbaWlZgmbZfgfjlZ
-=======
-a:b:c
->>>>>>> b365caa624acda4dfc73912e1620b44c3ea2d524
