@@ -97,7 +97,7 @@ def instructions():
   You must guess it yourself.
 
   However if the user guesses the word before the hangman
-  is complete, then they wxin!
+  is complete, then they win!
 
   (Press enter when you finish reading.)'''
 
@@ -140,7 +140,8 @@ def gameHuman():
         os.system('cls')
         print(f"You Win! The word was: {hiddenWord}")
         time.sleep(2)
-        break
+        lives = 0
+        mainMenu()
 
     # If the letter guessed is not a single letter then it tells the player to enter only one letter
     if len(guessRandom) != 1 or not guessRandom.isalpha():
@@ -166,14 +167,14 @@ def gameHuman():
         print(f"You Win! The word was: {hiddenWord}")
         time.sleep(2)
         lives = 0
-        break
+        mainMenu()
 
     if lives >= 6:
         os.system('cls')
         print(f"{HANGMANPICS[6]}\nYou lost the game. The word was: {hiddenWord}")
         time.sleep(2)
         lives = 0
-        break
+        mainMenu()
 
 def gameBot():
   # Randomises the word in the given list of words
@@ -201,7 +202,7 @@ def gameBot():
         os.system('cls')
         print(f"You Win! The word was: {hiddenWord}")
         time.sleep(2)
-        break
+        mainMenu()
 
     # If the letter guessed is not a single letter then it tells the player to enter only one letter
     if len(guessRandom) != 1 or not guessRandom.isalpha():
@@ -227,18 +228,19 @@ def gameBot():
         print(f"You Win! The word was: {hiddenWord}")
         time.sleep(2)
         lives = 0
-        break
+        mainMenu()
 
     if lives >= 6:
         os.system('cls')
         print(f"{HANGMANPICS[6]}\nYou lost the game. The word was: {hiddenWord}")
         time.sleep(2)
         lives = 0
-        break
+        mainMenu()
 
 
 # Main menu function that displays the main menu
 def mainMenu():
+  os.system('cls')
   while True:
     try:
       mainMenuSelection = int(input(
@@ -277,7 +279,7 @@ def mainMenu():
       elif mainMenuSelection == 2:
         gameBot()
 
-      #elif mainMenuSelection == 3:
+      elif mainMenuSelection == 3:
         gameHuman()
 
       elif mainMenuSelection == 4:
