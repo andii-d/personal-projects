@@ -87,7 +87,7 @@ def instructions():
   os.system('cls')
   instr = '''\n
   The objective of the game is for a human/bot to
-  guess or select a word and the player has to guess it.
+  select a word and the player has to guess it.
 
   The game ends when the hangman is fully drawn out.
 
