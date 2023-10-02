@@ -199,3 +199,147 @@ steps for next time:
 • do 'shift = len(password) - len(password) - len(password)' to get the original shift
 • implement the system into login()
 """
+
+
+import string
+import time
+
+# Holds all the accounts within a class dictionary
+allAccounts = {}
+
+class Account:
+    def __init__(self, account, username, password):
+        self.account = account
+        self.username = username
+        self.password = password
+
+def encryption(password):
+    encrypt_pw = password
+    # Shifts the password by the length of itself
+    shift = len(password)
+    # Gets the string of ascii letters
+    alphabet = string.ascii_letters
+    # Shifts the ascii letters by the number given
+    shifted = alphabet[shift:] + alphabet[:shift]
+    # Makes a translation of the ascii alphabet to apply to the password
+    table = str.maketrans(alphabet, shifted)
+    # Applies the translated alphabet to the password
+    encrypted = encrypt_pw.translate(table)
+
+    return encrypted, shift
+
+def save_account(account, username, encrypted_password, shift):
+    with open('database.txt', 'a') as f:
+        f.write(f"{account}:{username}:{encrypted_password}:{shift}\n")
+
+def load_accounts():
+    accounts = {}
+    with open('database.txt') as file:
+        for line in file:
+            # Strips the line of any new lines
+            line = line.rstrip()
+            # Splits the line by a : and assigns it into the corresponding variables
+            account, username, encrypted_password, shift = line.split(':')
+            # Initializes the Account object
+            newAccount = Account(account, username, encrypted_password)
+            # Add the account object to the dictionary
+            allAccounts[account] = newAccount
+    return accounts
+
+def register():
+    print('\nWelcome to the registration page.')
+
+    # Setting the user's new account with their sign-in credentials
+    while True:
+        account = input('\nPlease create an account name: ')
+        if account == '' or account in allAccounts:
+            print('The account already exists or has an invalid name. Please re-enter a new name.\n')
+            continue
+
+        username = input('\nPlease create a username: ')
+        if username == '' or username in allAccounts:
+            print('The username is already taken or is invalid. Please choose another username.\n')
+            continue
+
+        password = input('\nPlease create a password: ')
+
+        if password == '':
+            print('Please re-enter a valid password.')
+        else:
+            encrypted_password, shift = encryption(password)
+
+            with open('database.txt', 'a') as f:
+                f.write(f"{account}:{username}:{encrypted_password}:{shift}\n")
+                print('\nYour credentials have been encrypted and saved.\n')
+                break
+
+def login():
+    print('\nWelcome to the login page.')
+
+    while True:
+        # Ask the user to enter their credentials
+        account = input('\nPlease enter your account: ')
+        if account in allAccounts:
+            username = input('\nPlease enter your username: ')
+            if username == allAccounts[account].username:
+                encrypted_password = allAccounts[account].password
+                shift = int(allAccounts[account].shift)  # Retrieve the shift from the account object
+                # Decrypt the password using shift
+                decrypted_password = decrypt(encrypted_password, shift)
+                print(f'\nAccount accessed. Your password is: {decrypted_password}')
+                break
+            else:
+                print('Please re-enter a correct username.')
+                continue
+        else:
+            print('Please re-enter a correct account name.')
+            continue
+
+def decrypt(encrypted_password, shift):
+    alphabet = string.ascii_letters
+    shifted = alphabet[shift:] + alphabet[:shift]
+    table = str.maketrans(shifted, alphabet)
+    decrypted = encrypted_password.translate(table)
+    return decrypted
+
+def menu():
+    print('\nWelcome to your personal password reminder!\n'
+          '\n1. Enter your account, username, and password'
+          '\n2. Recover your account'
+          '\n3. Quit\n')
+
+    while True:
+        try:
+            mainmenu = int(input('Please enter an option: '))
+
+        except ValueError:
+            print('Please enter an integer.')
+            continue
+
+        else:
+            if mainmenu == 1:
+                register()
+
+            elif mainmenu == 2:
+                login()
+
+            elif mainmenu == 3:
+                print('Quitting.', end=''), time.sleep(0.5)
+                print('.', end=''), time.sleep(0.5)
+                print('.')
+                quit()
+
+# Load accounts from the database file
+with open('database.txt') as file:
+    for line in file:
+        # Strips the line of any new lines
+        line = line.rstrip()
+        # Splits the line by a : and assigns it into the corresponding variables
+        account, username, encrypted_password, shift = line.split(':')
+        # Initializes the Account object
+        newAccount = Account(account, username, encrypted_password)
+        # Add the account object to the dictionary
+        newAccount.shift = shift  # Add shift value to the account object
+        allAccounts[account] = newAccount
+
+menu()
