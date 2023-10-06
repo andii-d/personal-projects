@@ -1,3 +1,2 @@
-# personal-projects
-
-# this is all of my personal projects (if i continue to use this overtime)
+# all of my personal projects !
+## will build up with diff. languages 
