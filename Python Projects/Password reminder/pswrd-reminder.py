@@ -42,6 +42,10 @@ should be deleted. Closing the program and re-running it should not reset the nu
 
 import string
 import time
+import sys
+import os
+
+
 
 # Holds all the accounts within a class dictionary
 allAccounts = {}
@@ -68,12 +72,12 @@ def encryption(password):
     return encrypted, shift
 
 def save_account(account, username, encrypted_password):
-    with open('database.txt', 'a') as f:
+    with open('Python Projects\Password reminder\databaseReminder.txt', 'a') as f:
         f.write(f"{account}:{username}:{encrypted_password}\n")
 
 def load_accounts():
     accounts = {}
-    with open('database.txt') as file:
+    with open('Python Projects\Password reminder\databaseReminder.txt') as file:
         for line in file:
             # Strips the line of any new lines
             line = line.rstrip()
@@ -107,10 +111,10 @@ def register():
         else:
             encrypted_password, shift = encryption(password)
 
-            with open('database.txt', 'a') as f:
+            with open('Python Projects\Password reminder\databaseReminder.txt', 'a') as f:
                 f.write(f"{account}:{username}:{encrypted_password}:{shift}\n")
                 print('\nYour credentials have been encrypted and saved.\n')
-                break
+                menu()
 
 def login():
     print('\nWelcome to the login page.')
@@ -126,7 +130,7 @@ def login():
                 # Decrypt the password using shift
                 decrypted_password = decrypt(encrypted_password, shift)
                 print(f'\nAccount accessed. Your password is: {decrypted_password}')
-                break
+                menu()
             else:
                 print('Please re-enter a correct username.')
                 continue
@@ -169,7 +173,7 @@ def menu():
                 quit()
 
 # Load accounts from the database file
-with open('database.txt') as file:
+with open('Python Projects\Password reminder\databaseReminder.txt') as file:
     for line in file:
         # Strips the line of any new lines
         line = line.rstrip()
