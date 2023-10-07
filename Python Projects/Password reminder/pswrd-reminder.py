@@ -42,6 +42,46 @@ should be deleted. Closing the program and re-running it should not reset the nu
 
 import string
 import time
+from cryptography.fernet import Fernet
+
+
+# opening the key
+with open('Python Projects\\Password reminder\\filekey.key', 'rb') as filekey:
+	key = filekey.read()
+
+# using the generated key
+fernet = Fernet(key)
+
+# opening the original file to encrypt
+with open('Python Projects\Password reminder\databaseReminder.txt', 'rb') as file:
+	original = file.read()
+	
+# encrypting the file
+encrypted = fernet.encrypt(original)
+
+# opening the file in write mode and 
+# writing the encrypted data
+with open('Python Projects\Password reminder\databaseReminder.txt', 'wb') as encrypted_file:
+	encrypted_file.write(encrypted)
+
+# decryption below
+
+# using the key
+fernet = Fernet(key)
+
+# opening the encrypted file
+with open('Python Projects\Password reminder\databaseReminder.txt', 'rb') as enc_file:
+	encrypted = enc_file.read()
+
+# decrypting the file
+decrypted = fernet.decrypt(encrypted)
+
+# opening the file in write mode and
+# writing the decrypted data
+with open('Python Projects\Password reminder\databaseReminder.txt', 'wb') as dec_file:
+	dec_file.write(decrypted)
+
+
 
 # Holds all the accounts within a class dictionary
 allAccounts = {}
@@ -74,6 +114,7 @@ def encryption(password):
 
 def save_account(account, username, encrypted_password, shift):
     with open('Python Projects\Password reminder\databaseReminder.txt', 'a') as f:
+        # Write the details of the account and its password to the file 
         f.write(f"{account}:{username}:{encrypted_password}:{shift}\n")
 
 def load_accounts():
@@ -93,22 +134,47 @@ def load_accounts():
 def register():
     print('\nWelcome to the registration page.')
 
+    accLife = 3
+    usrLife = 3
+    
     # Setting the user's new account with their sign-in credentials
     while True:
         account = input('\nPlease create an account name: ')
         if account == '' or account in allAccounts:
-            print('The account already exists or has an invalid name. Please re-enter a new name.\n')
-            continue
-
+            print('\nThe account already exists or has an invalid name. Please re-enter a new name.\n'), time.sleep(0.7)
+            accLife -= 1
+            if accLife <= 0:
+                print('You have attempted too many times to enter your account. Back to home menu...'), time.sleep(0.7)
+                accLife = 3
+                menu()
+            else:
+                continue
+        
+        if accLife <= 0:
+            print('You have attempted too many times to enter your account. Back to home menu...'), time.sleep(0.7)
+            accLife = 3
+            menu()
+        
         username = input('\nPlease create a username: ')
         if username == '' or username in allAccounts:
-            print('The username is already taken or is invalid. Please choose another username.\n')
-            continue
+            print('\nThe username is already taken or is invalid. Please choose another username.\n'), time.sleep(0.7)
+            usrLife -= 1
+            if usrLife == 0:
+                print('You have attempted too many times to enter your username. Back to home menu...'), time.sleep(0.7)
+                usrLife = 3
+                menu()
+            else:
+                continue
+         
+        if usrLife == 0:
+            print('You have attempted too many times to enter your username. Back to home menu...'), time.sleep(0.7)
+            usrLife = 3
+            menu()
 
         password = input('\nPlease create a password: ')
 
         if password == '':
-            print('Please re-enter a valid password.')
+            print('Please re-enter a valid password.'), time.sleep(0.7)
         else:
             encrypted_password, shift = encryption(password)
 
@@ -132,13 +198,13 @@ def login():
                 shift = int(allAccounts[account].shift)  # Retrieve the shift from the account object
                 # Decrypt the password using shift, in the file
                 decrypted_password = decrypt(encrypted_password, shift)
-                print(f'\nAccount accessed. Your password is: {decrypted_password}')
+                print(f'\nAccount accessed. Your password is: {decrypted_password}'), time.sleep(1)
                 menu()
             else:
-                print('Please re-enter a correct username.')
+                print('Please re-enter a correct username.'), time.sleep(0.7)
                 continue
         else:
-            print('Please re-enter a correct account name.')
+            print('Please re-enter a correct account name.'), time.sleep(0.7)
             continue
 
 # Take the encrypted password and the shift as parameters
@@ -164,7 +230,7 @@ def menu():
             mainmenu = int(input('Please enter an option: '))
 
         except ValueError:
-            print('Please enter an integer.')
+            print('Please enter an integer.'), time.sleep(0.7)
             continue
 
         else:
