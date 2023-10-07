@@ -47,6 +47,7 @@ import time
 allAccounts = {}
 
 class Account:
+    # Make an initialiser that stores all the details of the accounts
     def __init__(self, account, username, password, shift):
         self.account = account
         self.username = username
@@ -54,11 +55,20 @@ class Account:
         self.shift = shift  # Store the shift value in the Account object
 
 def encryption(password):
+    # Turn the password given in the resigter function into a placeholder variable
     encrypt_pw = password
+    # Get the length of the password to shift it by the length of itself
     shift = len(password)
+    # Gets the ascii letters into a string variable
     alphabet = string.ascii_letters
+    # Slices alphabet starting from the shift, to the end (represents the forward shifted alphabet)
+    # [:shift] takes a slice of alphabet from the beginning, to the end of shift position (represents the wrapping around)
+    # 'shifted' combines these two slices to create a new alphabet where letters are shifted according to the value of shift.
+    # i.e. if shift is 3, output is "defghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabc"
     shifted = alphabet[shift:] + alphabet[:shift]
+    # Makes an available translation of the ciphered alphabet
     table = str.maketrans(alphabet, shifted)
+    # Translates the password along the ciphered one, by mapping each letter to another i.e. if shift is 3, a will become d, etc
     encrypted = encrypt_pw.translate(table)
     return encrypted, shift
 
@@ -79,9 +89,6 @@ def load_accounts():
             # Add the account object to the dictionary
             accounts[account] = newAccount
     return accounts
-
-# Rest of your code remains the same
-
 
 def register():
     print('\nWelcome to the registration page.')
@@ -119,9 +126,11 @@ def login():
         if account in allAccounts:
             username = input('\nPlease enter your username: ')
             if username == allAccounts[account].username:
+                # Check if the entered username matches the account
                 encrypted_password = allAccounts[account].password
+                # Retrieve the encrypted password associated with the specified account
                 shift = int(allAccounts[account].shift)  # Retrieve the shift from the account object
-                # Decrypt the password using shift
+                # Decrypt the password using shift, in the file
                 decrypted_password = decrypt(encrypted_password, shift)
                 print(f'\nAccount accessed. Your password is: {decrypted_password}')
                 menu()
@@ -132,10 +141,15 @@ def login():
             print('Please re-enter a correct account name.')
             continue
 
+# Take the encrypted password and the shift as parameters
 def decrypt(encrypted_password, shift):
+    # Get the string of the ascii letters, a-zA-Z
     alphabet = string.ascii_letters
+    # Get the shifted alphabet again by translating the old one by the shift
     shifted = alphabet[shift:] + alphabet[:shift]
+    # Translate password back by reversing the cipher; 
     table = str.maketrans(shifted, alphabet)
+    # Translate the encrypted password by mapping each letter to the original alphabet according to the shift, using the table
     decrypted = encrypted_password.translate(table)
     return decrypted
 
