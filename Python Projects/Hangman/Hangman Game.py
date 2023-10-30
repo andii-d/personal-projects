@@ -57,7 +57,6 @@ import sys
 import random
 import time
 import os
-import re
 
 
 global lives
@@ -117,7 +116,7 @@ def gameHuman():
   os.system('cls')
   # Uses word given by human
   hiddenWord = input("Enter your hidden word: ")
-  # For every character in hiddenWord, replace it with an underscore
+  # For every character in hiddenWord, replace it with an underscore - uses list comprehension
   guessedWord = ['_' for _ in hiddenWord]  # Initialize with underscores
   # Put all the guessed letters in a set to track what letters have already been guessed
   guessedLetters = set()
