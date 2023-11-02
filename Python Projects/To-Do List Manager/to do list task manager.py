@@ -1,156 +1,136 @@
-#   import tkinter as tk
-#   from tkinter import messagebox
-#   
-#   def add_task():
-#       task = entry.get()
-#       user = user_entry.get()
-#       if task and user:
-#           task_list.insert(tk.END, f"{user}: {task}")
-#           entry.delete(0, tk.END)
-#           user_entry.delete(0, tk.END)
-#       else:
-#           messagebox.showwarning("Warning", "Please enter both a user and a task.")
-#   
-#   def remove_task():
-#       try:
-#           selected_task_index = task_list.curselection()[0]
-#           task_list.delete(selected_task_index)
-#       except IndexError:
-#           messagebox.showwarning("Warning", "Please select a task to remove.")
-#   
-#   def toggle_complete():
-#       try:
-#           selected_task_index = task_list.curselection()[0]
-#           task = task_list.get(selected_task_index)
-#           if task.startswith("[ ] "):
-#               task = "[X] " + task[4:]
-#           elif task.startswith("[X] "):
-#               task = "[ ] " + task[4:]
-#           task_list.delete(selected_task_index)
-#           task_list.insert(selected_task_index, task)
-#       except IndexError:
-#           messagebox.showwarning("Warning", "Please select a task to toggle.")
-#   
-#   def save_tasks():
-#       tasks = task_list.get(0, tk.END)
-#       with open("tasks.txt", "w") as file:
-#           for task in tasks:
-#               file.write(f"{task}\n")
-#       messagebox.showinfo("Info", "Tasks have been saved to tasks.txt")
-#   
-#   root = tk.Tk()
-#   root.title("To-Do List")
-#   
-#   entry = tk.Entry(root, width=30)
-#   entry.pack(pady=10)
-#   
-#   user_entry = tk.Entry(root, width=30)
-#   user_entry.pack()
-#   
-#   add_button = tk.Button(root, text="Add Task", command=add_task)
-#   add_button.pack()
-#   
-#   task_list = tk.Listbox(root, height=10, width=50)
-#   task_list.pack()
-#   
-#   remove_button = tk.Button(root, text="Remove Task", command=remove_task)
-#   remove_button.pack()
-#   
-#   toggle_button = tk.Button(root, text="Toggle Complete", command=toggle_complete)
-#   toggle_button.pack()
-#   
-#   save_button = tk.Button(root, text="Save Tasks", command=save_tasks)
-#   save_button.pack()
-#   
-#   root.mainloop()
-#   
+import time
+import os
 
-# ABOVE CODE IS CHATGPT'S CODE, FOR REFERENCE OF USING TKINTER MODULE 
-
-class Account:
+class User:
     def __init__(self, username):
         self.username = username
-    
-with open('usernames.txt', 'a') as f:
-    pass
+        self.tasks = {}
+        self.task_count = 1
 
-username_input = input("Enter the name of the person's tasks you want to view: ")
+    def addTask(self, task):
+        task_info = {"task": task, "completed": False}
+        self.tasks[self.task_count] = task_info
+        self.task_count += 1
 
-while True:
-    try:
-        if username_input not in 
-
-task_ccount = Account(username)
-
-        
-tasks = []
-
-def addTask():
-    task = input("Enter a task: ")
-    tasks.append({"task": task, "complete": False})
-    print("Task added.")
-
-def removeTask():
-    if tasks:
-        print("Current tasks:")
-        for i, task in enumerate(tasks):
-            print(f"{i + 1}. [{task['complete']}]", task['task'])
-        
-        task_index = int(input("Enter the task number to remove: ")) - 1
-        if 0 <= task_index < len(tasks):
-            removed_task = tasks.pop(task_index)
-            print(f"Removed task: {removed_task['task']}")
+    def removeTask(self, task_number):
+        if task_number in self.tasks:
+            removed_task = self.tasks.pop(task_number)
+            print(f"Removed task {task_number}.")
         else:
-            print("Invalid task number.")
-    else:
-        print("No tasks to remove.")
+            print(f"Task {task_number} not found.")
 
-def toggleComplete():
-    if tasks:
-        print("Current tasks:")
-        for i, task in enumerate(tasks):
-            print(f"{i + 1}. [{task['complete']}]", task['task'])
-        
-        task_index = int(input("Enter the task number to toggle completion: ")) - 1
-        if 0 <= task_index < len(tasks):
-            tasks[task_index]['complete'] = not tasks[task_index]['complete']
-            print(f"Toggled completion of task: {tasks[task_index]['task']}")
+    def viewAllTasks(self):
+        for task_number, task_info in self.tasks.items():
+                print(f"Task {task_number}: {task_info['task']}")
+
+    def viewIncompleteTasks(self):
+        for task_number, task_info in self.tasks.items():
+            if not task_info["completed"]:
+                print(f"Task {task_number}: {task_info['task']}")
+
+    def saveTasks(self):
+        with open(f"{self.username}_tasks.txt", "a") as file:
+            for task_number, task_info in self.tasks.items():
+                task = task_info["task"]
+                completion = task_info["completed"]
+                completion_state = "True" if completion else "False"
+                file.write(f"{task_number}: {task}: {completion_state}\n")
+
+    def loadTasks(self):
+        self.tasks = {}
+        try:
+            with open(f"{self.username}_tasks.txt", "r") as file:
+                for line in file:
+                    parts = line.strip().split(": ")
+                    if len(parts) == 3:
+                        task_number, task, completion = parts[0], parts[1].strip(), parts[2]
+                        self.tasks[int(task_number)] = {"task": task, "completed": completion == "True"}
+        except FileNotFoundError:
+            # If the file doesn't exist, create an empty one
+            with open(f"{self.username}_tasks.txt", "w"):
+                pass
+
+    def editTasks(self, task_number_edit, task_new_edited):
+        if task_number_edit in self.tasks:
+            self.tasks[task_number_edit]["task"] = task_new_edited
+            print(f"Task {task_number_edit} updated.")
         else:
-            print("Invalid task number.")
-    else:
-        print("No tasks to toggle.")
+            print(f"Task {task_number_edit} not found.")
 
-def viewTasks():
-    if tasks:
-        print("Current tasks:")
-        for i, task in enumerate(tasks):
-            print(f"{i + 1}. [{task['complete']}]", task['task'])
-    else:
-        print("No tasks to display.")
+    def toggleTasks(self, task_number_edit):
+        if task_number_edit in self.tasks:
+            current_completion_state = self.tasks[task_number_edit]["completed"]
+            self.tasks[task_number_edit]["completed"] = not current_completion_state
+            print(f"Task {task_number_edit} completed.")
+        else:
+            print(f"Task {task_number_edit} not found. ")
 
-while True:
-    print("\nText-Based To-Do List")
-    print("1. Add Task")
-    print("2. Remove Task")
-    print("3. Toggle Complete")
-    print("4. View Tasks")
-    print("5. Exit")
+def main():
+    with open('usernames.txt', 'r') as f:
+        usernames = [line.strip() for line in f]
 
-    choice = input("Enter your choice: ")
+    username = input("Enter your name: ")
+    if username not in usernames:
+        print("\nName does not exist. Creating a new account...\n")
+        with open('usernames.txt', 'a') as f:
+            f.write(f"{username}\n")
 
-    if choice == "1":
-        addTask()
-    elif choice == "2":
-        removeTask()
-    elif choice == "3":
-        toggleComplete()
-    elif choice == "4":
-        viewTasks()
-    elif choice == "5":
-        print("Exiting the program.")
-        break
-    else:
-        print("Invalid choice. Please try again.")
+    # Create an object of the user's name
+    user = User(username)
+    # Load all the user's tasks if they have any
+    user.loadTasks()
 
+    while True:
+        choice = input("\n1. Add task\n2. Remove task\n3. View tasks\n4. Edit tasks\n5. Toggle completion of tasks\n6. Save and Exit\n")
 
-# add to it so 
+        if choice == "1":
+            task = input("Enter a task: ")
+            user.addTask(task)
+        elif choice == "2":
+            user.viewAllTasks()
+            while True:
+                try:
+                    task_number = int(input("\nEnter the task number to remove: "))
+                except ValueError:
+                    print("\nEnter a number.\n")
+                    continue
+                else:
+                    user.removeTask(task_number)
+                    break
+        elif choice == "3":
+            if user.tasks:
+                user.viewIncompleteTasks()
+            else:
+                print("No tasks to display.")
+        elif choice == "4":
+            if user.tasks:
+                for task_number, task in user.tasks.items():
+                    print(f"{task_number}: {task}")
+                task_num_edit = int(input("Enter the number of the task you want to edit: "))
+                task_new_edit = input("Enter the new task message: ")
+                user.editTasks(task_num_edit, task_new_edit)
+            else:
+                print("No tasks to display.")
+
+        elif choice == "5":
+            if user.tasks:
+                for task_number, task in user.tasks.items():
+                    print(f"{task_number}: {task}")
+                task_num_edit = int(input("Enter the number of the task you want to complete: "))
+                user.toggleTasks(task_num_edit)
+            else:
+                print("No tasks to display.")
+        elif choice == "6":
+            user.saveTasks()
+            print("Tasks saved. Exiting.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
+
+# In these following loops:
+    # for key, value in dictionary.items()
+    # The computer iterates through each key and then executes code if the value is also needed.
+
