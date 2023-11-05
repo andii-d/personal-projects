@@ -12,6 +12,17 @@ class User:
         self.tasks[self.task_count] = task_info
         self.task_count += 1
 
+    def completedTask(self, username):
+    with open(f"{username}_completed_tasks.txt", "a") as f:
+        for task_number, task_info in self.tasks.items():
+            task = task_info["task"]
+            completion = task_info["completed"]
+            if completion:
+                completion_state = "True"
+                f.write(f"{task_number}: {task}: {completion_state}\n")
+
+
+
     def removeTask(self, task_number):
         if task_number in self.tasks:
             removed_task = self.tasks.pop(task_number)
