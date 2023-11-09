@@ -1,4 +1,4 @@
-import time
+from time import sleep
 import os
 
 class User:
@@ -21,23 +21,39 @@ class User:
                     completion_state = "True"
                     f.write(f"{task_number}: {task}: {completion_state}\n")
 
-
-
     def removeTask(self, task_number):
         if task_number in self.tasks:
             removed_task = self.tasks.pop(task_number)
+
+            # Update the task numbers for the remaining tasks
+            updated_tasks = {}
+            # Start from an index of 1 to the end number
+            for i in range(1, len(self.tasks) + 1):
+                if i < task_number:
+                    #
+                    updated_tasks[i] = self.tasks[i]
+                else:
+                    updated_tasks[i] = self.tasks[i + 1]
+
+            self.tasks = updated_tasks
+            self.task_count -= 1
+
             print(f"Removed task {task_number}.")
         else:
             print(f"Task {task_number} not found.")
 
     def viewAllTasks(self):
+        print("")
         for task_number, task_info in self.tasks.items():
                 print(f"Task {task_number}: {task_info['task']}")
+                sleep(0.3)
 
     def viewIncompleteTasks(self):
+        print("")
         for task_number, task_info in self.tasks.items():
             if not task_info["completed"]:
                 print(f"Task {task_number}: {task_info['task']}")
+                sleep(0.3)
 
     def saveTasks(self):
         with open(f"{self.username}_tasks.txt", "a") as file:
@@ -62,6 +78,9 @@ class User:
                 pass
 
     def editTasks(self, task_number_edit, task_new_edited):
+        print("")
+        for task_number, task_info in self.tasks.items():
+                print(f"Task {task_number}: {task_info['task']}")
         if task_number_edit in self.tasks:
             self.tasks[task_number_edit]["task"] = task_new_edited
             print(f"Task {task_number_edit} updated.")
@@ -69,9 +88,29 @@ class User:
             print(f"Task {task_number_edit} not found.")
 
     def toggleTasks(self, task_number_edit):
+        print("")
         if task_number_edit in self.tasks:
             current_completion_state = self.tasks[task_number_edit]["completed"]
             self.tasks[task_number_edit]["completed"] = not current_completion_state
+
+            if task_number_edit in self.tasks:
+                removed_task = self.tasks.pop(task_number_edit)
+
+                # Update the task numbers for the remaining tasks
+                updated_tasks = {}
+                # Start from an index of 1 to the end number
+                for i in range(1, len(self.tasks) + 1):
+                    if i < task_number_edit:
+                        # Adds the current task to the new task dictionary
+                        updated_tasks[i] = self.tasks[i]
+                    else:
+                        updated_tasks[i] = self.tasks[i + 1]
+
+                self.tasks = updated_tasks
+                self.task_count -= 1
+                pass
+            else:
+                pass
             print(f"Task {task_number_edit} completed.")
         else:
             print(f"Task {task_number_edit} not found. ")
@@ -115,18 +154,12 @@ def main():
                 print("No tasks to display.")
         elif choice == "4":
             if user.tasks:
-                for task_number, task in user.tasks.items():
-                    print(f"{task_number}: {task}")
-                task_num_edit = int(input("Enter the number of the task you want to edit: "))
                 task_new_edit = input("Enter the new task message: ")
                 user.editTasks(task_num_edit, task_new_edit)
             else:
                 print("No tasks to display.")
-
         elif choice == "5":
             if user.tasks:
-                for task_number, task in user.tasks.items():
-                    print(f"{task_number}: {task}")
                 task_num_edit = int(input("Enter the number of the task you want to complete: "))
                 user.toggleTasks(task_num_edit)
             else:
@@ -144,4 +177,6 @@ if __name__ == "__main__":
 # In these following loops:
     # for key, value in dictionary.items()
     # The computer iterates through each key and then executes code if the value is also needed.
+
+
 
