@@ -47,6 +47,7 @@ class User:
         for task_number, task_info in self.tasks.items():
                 print(f"Task {task_number}: {task_info['task']}")
                 sleep(0.3)
+        X = input("\nPress enter when finished.")
 
     def viewIncompleteTasks(self):
         print("")
@@ -54,6 +55,7 @@ class User:
             if not task_info["completed"]:
                 print(f"Task {task_number}: {task_info['task']}")
                 sleep(0.3)
+        X = input("\nPress enter when finished.")
 
     def saveTasks(self):
         with open(f"{self.username}_tasks.txt", "a") as file:
@@ -177,6 +179,3 @@ if __name__ == "__main__":
 # In these following loops:
     # for key, value in dictionary.items()
     # The computer iterates through each key and then executes code if the value is also needed.
-
-
-
