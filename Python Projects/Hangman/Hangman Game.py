@@ -78,7 +78,7 @@ words = ('ant baboon badger bat bear beaver camel cat clam cobra cougar '
          'flag dirt frogs war tub oven chess glass channel badge slope fang').split()
 
 global insults
-insults = ('stupid retard dumbass fatass cunt idiot wankstain faggot jackass jerk asshole cow dipshit twat wanker ').split()
+insults = ('stupid dumbass fatass idiot wankstain jackass jerk asshole cow twat wanker ').split()
 
 
 
@@ -293,4 +293,6 @@ def mainMenu():
       os.system('cls')
       print(f"Enter a number within the given options, {random.choice(insults)}."), os.system('cls')
 
-mainMenu()
+if __name__ == '__main__':
+  mainMenu()
+
